@@ -1,14 +1,17 @@
 'use strict';
 var learnjs = {};
 
+
+
 learnjs.problemView = function() {
     return $('<div class="problem-view">').text('Coming soon!');
  }
 
  learnjs.problemView = function(problemNumber) {
-    var title = 'Problem #' + problemNumber + ' Coming Soon!';
-    return $('<div class="problem-view">').text(title);
- };
+     var view = $('.templates .problem-view').clone();
+     view.find('.title').text('Problem #' + problemNumber + ' Coming soon!');
+     return view;
+};
 
 learnjs.showView = function(hash) {
     var routes = {
@@ -27,4 +30,10 @@ learnjs.showView = function(hash) {
     };
      learnjs.showView(window.location.hash);
  };
+
+ learnjs.applyObject = function(obj, elem) {
+     for (var key in obj) {
+         elem.find('[data-name="' + key + '"]').text(obj[key]);
+     }
+ }
 
