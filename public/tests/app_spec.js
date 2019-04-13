@@ -72,6 +72,24 @@ describe ('LearnJS', function(){
 
     }
     );
+
     
+    describe('answer section', function() {
+        it('can check a correct answer by hitting a button', function() {
+            var view = learnjs.problemView('1');
+            view.find('.answer').val('true');
+            view.find('.check-btn').click();
+            expect(view.find('.result').text()).toContain('Correct!'); //book didn't address this, but added a button on correct click so changed to contain to account (again white space added too)
+        });
+
+        it('rejects an incorrect answer', function() {
+            var view = learnjs.problemView('1');
+            view.find('.answer').val('false');
+            view.find('.check-btn').click();
+            expect(view.find('.result').text()).toEqual('Incorrect!');
+        });
+
+    });
+
 }
 );
