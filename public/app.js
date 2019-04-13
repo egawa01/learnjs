@@ -12,16 +12,6 @@ learnjs.problems = [
     }
 ];
 
-learnjs.problemView = function() {
-    return $('<div class="problem-view">').text('Coming soon!');
- }
-
- learnjs.problemView = function(problemNumber) {
-     var view = $('.templates .problem-view').clone();
-     view.find('.title').text('Problem #' + problemNumber + ' Coming soon!');
-     return view;
-};
-
 learnjs.problemView = function(data) {
     var problemNumber = parseInt(data, 10);
     var view = $('.templates .problem-view').clone();

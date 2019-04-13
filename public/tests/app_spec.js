@@ -36,10 +36,30 @@ describe ('LearnJS', function(){
     describe('problem view', function() {
         it('has a title that includes the problem number', function() {
             var view = learnjs.problemView('1');
-            expect(view.text()).toEqual('Problem #1 Coming Soon!');
+            expect(view.find('.title').text()).toEqual('Problem #1');
         }
         );
+
+        it('shows the description', function() {
+            var view = learnjs.problemView('1');
+            expect(view.find('[data-name="description"]').text()).toEqual('What is truth?');
+        }
+        );
+
+        it('shows the description', function() {
+            var view = learnjs.problemView('1');
+            expect(view.find('[data-name="description"]').text()).toEqual('What is truth?');
+        }
+        );
+
+        it('shows the code', function() {
+            var view = learnjs.problemView('1');
+            expect(view.find('[data-name="code"]').text()).toEqual('function problem() {return __; }');
+        }
+        );
+
     }
     );
+    
 }
 );
