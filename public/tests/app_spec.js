@@ -34,27 +34,39 @@ describe ('LearnJS', function(){
     );
 
     describe('problem view', function() {
-        it('has a title that includes the problem number', function() {
+        it('has a title that includes the problem number 1', function() {
             var view = learnjs.problemView('1');
             expect(view.find('.title').text()).toEqual('Problem #1');
         }
         );
 
-        it('shows the description', function() {
+        it('shows the description 1', function() {
             var view = learnjs.problemView('1');
             expect(view.find('[data-name="description"]').text()).toEqual('What is truth?');
         }
         );
 
-        it('shows the description', function() {
-            var view = learnjs.problemView('1');
-            expect(view.find('[data-name="description"]').text()).toEqual('What is truth?');
-        }
-        );
-
-        it('shows the code', function() {
+             it('shows the code 1', function() {
             var view = learnjs.problemView('1');
             expect(view.find('[data-name="code"]').text()).toEqual('function problem() {return __; }');
+        }
+        );
+
+        it('has a title that includes the problem number 2', function() {
+            var view = learnjs.problemView('2');
+            expect(view.find('.title').text()).toEqual('Problem #2');
+        }
+        );
+
+        it('shows the description 2', function() {
+            var view = learnjs.problemView('2');
+            expect(view.find('[data-name="description"]').text()).toEqual('Simple Math');
+        }
+        );
+
+             it('shows the code 2', function() {
+            var view = learnjs.problemView('2');
+            expect(view.find('[data-name="code"]').text()).toEqual('function problem() {return 42 === 6 * __; }');
         }
         );
 
