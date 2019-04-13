@@ -5,6 +5,8 @@ var learnjs = {
     poolId: 'us-east-1:6d7480d0-8fb2-400a-8a5c-cc3512715e60'
 };
 
+learnjs.identity = new $.deferred();
+
 learnjs.problems = [
     {
         description: "What is truth?",
@@ -114,6 +116,8 @@ learnjs.triggerEvent = function(name, args) {
     $('.view-container>*').trigger(name, args);
 }
 
+
+
 function googleSignIn(googleUser){
     console.log('arguments');
     console.log(arguments);
@@ -126,6 +130,24 @@ function googleSignIn(googleUser){
                 'accounts.google.com': id_token
             }
         })
+    });
+
+    learnjs.awsRefresh = function() {
+        var deferred = new $.Deferred();
+        AWS.config.credentials.refresh(function(err) {
+            if (err) {
+                deferred.resolve(AWS.config.credentials.identityId);
+            }
+        });
+        return deferred.promise();
+    }
+
+    learnjs.awsRefresh().then(function(id) {
+        learnjs.identity.resolve({
+            id: id,
+            email: googleUser.getBasicProfile().getEmail(),
+            refresh: refresh
+        });
     });
 }
 
