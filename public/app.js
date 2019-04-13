@@ -31,10 +31,10 @@ learnjs.problemView = function(data) {
 
     function checkAnswerClick() {
         if (checkAnswer()) {
-            resultFlash.text('Correct!')
+            learnjs.flashElement(resultFlash, 'Correct!'); 
         } else {
-            resultFlash.text('Incorrect!')
-        }
+            learnjs.flashElement(resultFlash, 'Incorrect!'); 
+       }
         return false;
     }
 
@@ -69,3 +69,9 @@ learnjs.showView = function(hash) {
      }
  }
 
+ learnjs.flashElement = function(elem, content) {
+    elem.fadeOut('slow', function() {
+        elem.html(content);
+        elem.fadeIn();
+    });
+};
