@@ -1,5 +1,9 @@
 'use strict';
-var learnjs = {};
+
+
+var learnjs = {
+    poolId: 'us-east-1:6d7480d0-8fb2-400a-8a5c-cc3512715e60'
+};
 
 learnjs.problems = [
     {
@@ -108,4 +112,30 @@ learnjs.buildCorrectFlash = function(problemNum) {
 
 learnjs.triggerEvent = function(name, args) {
     $('.view-container>*').trigger(name, args);
+}
+
+function googleSignIn(googleUser){
+    console.log('arguments');
+    console.log(arguments);
+    var id_token = googleUser.getAuthResponse().id_token;
+    AWS.config.update({
+        region: 'us-east-1',
+        credentials: new AWS.CognitoIdentityCredentials({
+            IdentityPoolId: learnjs.poolId,
+            Logins: {
+                'accounts.google.com': id_token
+            }
+        })
+    });
+}
+
+function refresh() {
+    return gapi.auth2.getAuthInstance().signIn({
+        prompt: 'login'
+    }).then(function(userUpdate) {
+        var creds = AWS.config.credentials;
+        var newToken = userUpdate.getAuthResponse().id_token;
+        creds.params.Logins['accounts.google.com'] = newToken;
+        return learnjs.awsRefresh();
+    });
 }
