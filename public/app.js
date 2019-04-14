@@ -5,7 +5,7 @@ var learnjs = {
     poolId: 'us-east-1:6d7480d0-8fb2-400a-8a5c-cc3512715e60'
 };
 
-learnjs.identity = new $.deferred();
+learnjs.identity = new $.Deferred();
 
 learnjs.problems = [
     {
@@ -64,23 +64,36 @@ learnjs.landingView = function() {
     return learnjs.template('landing-view');
 }
 
+learnjs.profileView = function() {
+    var view = learnjs.template('profile-view');
+    learnjs.identity.done(function(identity) {
+        view.find('.email').text(identity.email);
+    });
+    return view;
+}
+
 learnjs.showView = function(hash) {
     var routes = {
         '#problem': learnjs.problemView,
+        '#profile': learnjs.profileView,
+        '#': learnjs.landingView,
         '': learnjs.landingView
     };
     var hashParts = hash.split('-');
     var viewFn = routes[hashParts[0]];
     if(viewFn) {
         learnjs.triggerEvent('removingView', []);
-        $('.view-container').empty().append(viewFn(hashParts[1]));    };
+        $('.view-container').empty().append(viewFn(hashParts[1]));    
+    };
  };
 
  learnjs.appOnReady = function() {
+    console.log('appOnReady');
     window.onhashchange = function() {
         learnjs.showView(window.location.hash);
     };
-     learnjs.showView(window.location.hash);
+    learnjs.showView(window.location.hash);
+    learnjs.identity.done(learnjs.addProfileLink);
  };
 
  learnjs.applyObject = function(obj, elem) {
@@ -119,8 +132,6 @@ learnjs.triggerEvent = function(name, args) {
 
 
 function googleSignIn(googleUser){
-    console.log('arguments');
-    console.log(arguments);
     var id_token = googleUser.getAuthResponse().id_token;
     AWS.config.update({
         region: 'us-east-1',
@@ -136,12 +147,18 @@ function googleSignIn(googleUser){
         var deferred = new $.Deferred();
         AWS.config.credentials.refresh(function(err) {
             if (err) {
+                deferred.reject(err);
+            } else {
                 deferred.resolve(AWS.config.credentials.identityId);
             }
         });
+        console.log('awsRefresh');
+        console.log(deferred.promise().email);
         return deferred.promise();
     }
 
+    console.log('refresh');
+    console.log(googleUser.getBasicProfile().getEmail());
     learnjs.awsRefresh().then(function(id) {
         learnjs.identity.resolve({
             id: id,
@@ -149,6 +166,7 @@ function googleSignIn(googleUser){
             refresh: refresh
         });
     });
+    console.log(learnjs.identity.email);
 }
 
 function refresh() {
@@ -160,4 +178,12 @@ function refresh() {
         creds.params.Logins['accounts.google.com'] = newToken;
         return learnjs.awsRefresh();
     });
+}
+
+learnjs.addProfileLink = function(profile) {
+    console.log('profile');
+    console.log(profile);
+    var link = learnjs.template('profile-link');
+    link.find('a').text(profile.email);
+    $('.signin-bar').prepend(link);
 }
